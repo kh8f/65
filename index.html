@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسليم الحساب | MASOUB STORE</title>
 
+    <!-- أيقونة التبويب (فافيكون) SVG - حقيبة تسوّق بلون العلامة التجارية -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='20' y1='20' x2='180' y2='180' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23f2c14e'/%3E%3Cstop offset='50%25' stop-color='%23ff0f2b'/%3E%3Cstop offset='100%25' stop-color='%23ff4d5e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='200' height='200' rx='40' fill='%2309090a'/%3E%3Cpath d='M75 65 C75 38, 125 38, 125 65' stroke='url(%23g)' stroke-width='12' stroke-linecap='round' fill='none'/%3E%3Cpath d='M45 70 L155 70 C162 70, 167 76, 165 83 L150 162 C148 170, 142 175, 134 175 L66 175 C58 175, 52 170, 50 162 L35 83 C33 76, 38 70, 45 70 Z' stroke='url(%23g)' stroke-width='11' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='75' cy='70' r='4' fill='url(%23g)'/%3E%3Ccircle cx='125' cy='70' r='4' fill='url(%23g)'/%3E%3Cpath d='M88 95 L124 116 C127 118, 127 122, 124 124 L88 145 C84 147, 80 144, 80 140 L80 100 C80 96, 84 93, 88 95 Z' fill='url(%23g)'/%3E%3C/svg%3E">
+
     <!-- الخطوط والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=Tajawal:wght@400;500;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
@@ -662,6 +665,185 @@
             margin-top: 14px;
         }
 
+        /* شبكة إحصائيات إضافية (النشطة/المنتهية/الإجمالي) */
+        .stats-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-card.stat-active .stat-number { background: linear-gradient(90deg, #7ee787, #2ea043); background-clip: text; -webkit-background-clip: text; }
+        .stat-card.stat-expired .stat-number { background: linear-gradient(90deg, var(--red-soft), var(--red)); background-clip: text; -webkit-background-clip: text; }
+
+        .stat-emoji-icon { font-size: 1.5rem; line-height: 1; margin-bottom: 6px; }
+
+        /* عناوين فرعية داخل تبويب الإحصائيات */
+        .stats-subhead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0 10px;
+        }
+
+        .stats-subhead .section-label { margin: 0; }
+
+        .stats-subhead .refresh-mini {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            border-radius: 50px;
+            width: 28px; height: 28px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all .2s var(--ease);
+        }
+        .stats-subhead .refresh-mini:hover { color: var(--gold); border-color: var(--gold); transform: rotate(90deg); }
+
+        /* أكثر المنتجات استخدامًا */
+        .top-products-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 6px; }
+
+        .top-product-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+        }
+
+        .top-product-row .tpr-icon { color: var(--gold); font-size: 0.95rem; width: 18px; text-align: center; }
+        .top-product-row .tpr-name { flex: 1; font-size: 0.82rem; font-weight: 600; }
+        .top-product-row .tpr-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 50px; height: 6px; overflow: hidden; }
+        .top-product-row .tpr-bar { height: 100%; background: linear-gradient(90deg, var(--gold), var(--red-soft)); border-radius: 50px; }
+        .top-product-row .tpr-count { font-size: 0.78rem; font-weight: 800; color: var(--gold); direction: ltr; min-width: 18px; text-align: center; }
+
+        /* قائمة آخر الطلبات (تبويب الإحصائيات) */
+        .order-list { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; }
+
+        .order-list-item {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            transition: all .2s var(--ease);
+        }
+
+        .order-list-item:hover { border-color: var(--gold); }
+
+        .order-list-item .oli-main { cursor: pointer; flex: 1; min-width: 0; }
+        .order-list-item .oli-top { display: flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 700; }
+        .order-list-item .oli-id { color: var(--gold); direction: ltr; font-weight: 800; }
+        .order-list-item .oli-sub { font-size: 0.7rem; color: var(--text-dim); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .status-pill {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+        .status-pill.active { background: rgba(46, 160, 67, 0.15); color: #4bd76a; border: 1px solid rgba(46, 160, 67, 0.4); }
+        .status-pill.expired { background: rgba(255, 15, 43, 0.12); color: var(--red-soft); border: 1px solid rgba(255, 15, 43, 0.35); }
+
+        .oli-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+        .icon-btn {
+            width: 30px; height: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem;
+            transition: all .2s var(--ease);
+        }
+        .icon-btn:hover { color: var(--text); border-color: var(--border-hover); }
+        .icon-btn.edit-btn:hover { color: var(--gold); border-color: var(--gold); }
+        .icon-btn.delete-btn:hover { color: var(--red-soft); border-color: var(--red-soft); }
+
+        /* ملخص نتائج البحث برقم جوال العميل */
+        .search-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .search-summary .ss-box {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 4px;
+            text-align: center;
+        }
+        .search-summary .ss-num { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
+        .search-summary .ss-num.ss-active { color: #4bd76a; }
+        .search-summary .ss-num.ss-expired { color: var(--red-soft); }
+        .search-summary .ss-label { font-size: 0.66rem; color: var(--text-dim); margin-top: 2px; }
+
+        /* مودال تفاصيل الطلب */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+        .modal-overlay[hidden] { display: none; }
+
+        .modal-box {
+            width: 100%;
+            max-width: 380px;
+            background: var(--elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px 20px;
+            text-align: right;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px; left: 14px;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+        .modal-close:hover { color: var(--text); }
+
+        .modal-title { font-size: 1.05rem; font-weight: 800; color: var(--gold); margin-bottom: 16px; }
+
+        .modal-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+            gap: 10px;
+        }
+        .modal-row:last-of-type { border-bottom: none; }
+        .modal-row .mr-label { color: var(--text-dim); display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .modal-row .mr-value { font-weight: 700; text-align: left; word-break: break-all; }
+
+        .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+        .modal-actions .btn { flex: 1; }
+
         /* شارة رقم الطلب على البطاقة المُصدّرة */
         .order-badge-wrap {
             display: flex;
@@ -903,6 +1085,7 @@
                     <input type="text" id="searchInput" placeholder="مثال: 10482 أو 05xxxxxxxx" oninput="runSearch()">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
+                <div id="searchSummaryWrap"></div>
                 <div class="search-results" id="searchResults">
                     <div class="search-empty">اكتب رقم الطلب أو رقم جوال العميل للبحث 🔎</div>
                 </div>
@@ -961,6 +1144,39 @@
                         <div class="stat-label">🗓️ هذا الشهر</div>
                     </div>
                 </div>
+                <div class="stats-grid-2">
+                    <div class="stat-card stat-total">
+                        <div class="stat-emoji-icon">📦</div>
+                        <div class="stat-number" id="statTotal">0</div>
+                        <div class="stat-label">إجمالي الطلبات</div>
+                    </div>
+                    <div class="stat-card stat-active">
+                        <div class="stat-emoji-icon">✅</div>
+                        <div class="stat-number" id="statActive">0</div>
+                        <div class="stat-label">اشتراكات نشطة</div>
+                    </div>
+                    <div class="stat-card stat-expired">
+                        <div class="stat-emoji-icon">⛔</div>
+                        <div class="stat-number" id="statExpired">0</div>
+                        <div class="stat-label">اشتراكات منتهية</div>
+                    </div>
+                </div>
+
+                <div class="stats-subhead">
+                    <span class="section-label"><i class="fa-solid fa-fire"></i> 🔥 أكثر المنتجات استخدامًا</span>
+                </div>
+                <div class="top-products-list" id="topProductsList">
+                    <div class="search-empty">لا توجد بيانات بعد</div>
+                </div>
+
+                <div class="stats-subhead">
+                    <span class="section-label"><i class="fa-solid fa-clock-rotate-left"></i> 🕓 آخر الطلبات</span>
+                    <button class="refresh-mini" onclick="renderStats()" title="تحديث"><i class="fa-solid fa-rotate"></i></button>
+                </div>
+                <div class="order-list" id="recentOrdersList">
+                    <div class="search-empty">لا توجد طلبات محفوظة بعد</div>
+                </div>
+
                 <div class="stats-footnote" id="statsTotal">إجمالي الطلبات المحفوظة: 0 📦</div>
             </div>
         </div>
@@ -1074,6 +1290,19 @@
 
     </div>
 
+    <!-- مودال تفاصيل الطلب: يظهر عند الضغط على أي طلب من قائمة "آخر الطلبات" أو نتائج البحث -->
+    <div class="modal-overlay no-print" id="orderModal" hidden onclick="if(event.target===this) closeOrderModal()">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeOrderModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-title" id="modalTitle">تفاصيل الطلب</div>
+            <div id="modalBody"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="modalEditBtn"><i class="fa-solid fa-pen"></i> تعديل</button>
+                <button class="btn btn-primary" id="modalDeleteBtn" style="background: linear-gradient(90deg, var(--red-soft), var(--red));"><i class="fa-solid fa-trash"></i> حذف</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
@@ -1157,13 +1386,16 @@
                 setTimeout(() => btn.classList.remove('pulse'), 500);
             }
 
-            saveOrders([...getOrders(), currentOrder]);
+            // ملاحظة مهمة: الطلب ما يُحفظ بالسجل ولا يُحتسب بالإحصائيات إلا لما
+            // المستخدم فعليًا يصدّره كـ PDF أو صورة (شوف commitOrder + printSafely/downloadAsImage).
+            // كذا فتح الصفحة أو عمل ريفرش ما يزيد العداد.
             renderOrderPreview();
             renderStats();
         }
 
-        // يحدّث بيانات الطلب النشط في التخزين المحلي كل ما تغيّر حقل
-        // (الهاتف، البريد، كلمة المرور، الخدمة، المدة) دون توليد رقم جديد
+        // يحدّث بيانات الطلب الحالي في الذاكرة فقط (بدون حفظ بالسجل) كل ما تغيّر
+        // حقل (الهاتف، البريد، كلمة المرور، الخدمة، المدة) — الحفظ الفعلي يصير
+        // فقط عند التصدير عبر commitOrder().
         function upsertCurrentOrder() {
             if (!currentOrder) return;
             currentOrder.phone = document.getElementById('customerPhone').value || '';
@@ -1176,11 +1408,20 @@
             const purchaseDate = new Date(currentOrder.purchaseDate);
             currentOrder.expiryDate = addDays(purchaseDate, currentDurationDays).toISOString();
 
+            renderOrderPreview();
+        }
+
+        // يحفظ الطلب الحالي فعليًا بالسجل (localStorage) ويحتسبه بالإحصائيات —
+        // يُستدعى فقط عند نجاح تصدير PDF أو صورة، حسب طلب المستخدم صراحة.
+        function commitOrder() {
+            if (!currentOrder) return;
+            upsertCurrentOrder();
+
             const list = getOrders();
             const idx = list.findIndex(o => o.id === currentOrder.id);
             if (idx > -1) list[idx] = currentOrder; else list.push(currentOrder);
             saveOrders(list);
-            renderOrderPreview();
+            renderStats();
         }
 
         // يعرض بيانات الطلب النشط بلوحة التحكم وبالبطاقة المُصدّرة معًا
@@ -1228,7 +1469,7 @@
             }
 
             box.innerHTML = matches.slice(0, 30).map(o => `
-                <div class="search-result-item" onclick="loadOrderIntoCard(${o.id})">
+                <div class="search-result-item" onclick="openOrderModal(${o.id})">
                     <div>
                         <div class="sri-main"><i class="${o.serviceIcon || 'fa-solid fa-tv'}"></i> ${o.service || ''}</div>
                         <div class="sri-sub">${o.phone ? '📱 ' + o.phone + ' · ' : ''}${formatDateAr(o.purchaseDate)}</div>
@@ -1236,6 +1477,28 @@
                     <div class="sri-id">#${o.id}</div>
                 </div>
             `).join('');
+
+            // إذا البحث برقم جوال (يعني فيه أكثر من طلب أو رقم غير رقمي بحت لرقم طلب) نعرض ملخص للعميل
+            renderSearchSummary(q, matches);
+        }
+
+        // يعرض ملخص لعدد طلبات العميل (كم فعال / كم منتهي) عند البحث برقم الجوال
+        function renderSearchSummary(query, matches) {
+            const wrap = document.getElementById('searchSummaryWrap');
+            const isPhoneSearch = matches.some(o => o.phone && o.phone.includes(query)) && query.length >= 4;
+            if (!isPhoneSearch || matches.length < 1) { wrap.innerHTML = ''; return; }
+
+            const total = matches.length;
+            const active = matches.filter(o => daysRemaining(o.expiryDate) >= 0).length;
+            const expired = total - active;
+
+            wrap.innerHTML = `
+                <div class="search-summary">
+                    <div class="ss-box"><div class="ss-num">${total}</div><div class="ss-label">📦 إجمالي طلباته</div></div>
+                    <div class="ss-box"><div class="ss-num ss-active">${active}</div><div class="ss-label">✅ نشطة</div></div>
+                    <div class="ss-box"><div class="ss-num ss-expired">${expired}</div><div class="ss-label">⛔ منتهية</div></div>
+                </div>
+            `;
         }
 
         // يحمّل طلب سابق من نتائج البحث مرة ثانية على البطاقة (لإعادة الطباعة/الإرسال)
@@ -1285,18 +1548,125 @@
             const weekStart = new Date(todayStart); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
             const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-            let today = 0, week = 0, month = 0;
+            let today = 0, week = 0, month = 0, active = 0, expired = 0;
+            const productCounts = {};
+
             orders.forEach(o => {
                 const d = new Date(o.createdAt);
                 if (d >= todayStart) today++;
                 if (d >= weekStart) week++;
                 if (d >= monthStart) month++;
+
+                if (daysRemaining(o.expiryDate) >= 0) active++; else expired++;
+
+                const key = o.service || 'غير محدد';
+                if (!productCounts[key]) productCounts[key] = { count: 0, icon: o.serviceIcon || 'fa-solid fa-tv' };
+                productCounts[key].count++;
             });
 
             animateCounter(document.getElementById('statToday'), today);
             animateCounter(document.getElementById('statWeek'), week);
             animateCounter(document.getElementById('statMonth'), month);
+            animateCounter(document.getElementById('statTotal'), orders.length);
+            animateCounter(document.getElementById('statActive'), active);
+            animateCounter(document.getElementById('statExpired'), expired);
             document.getElementById('statsTotal').textContent = `إجمالي الطلبات المحفوظة: ${orders.length} 📦`;
+
+            renderTopProducts(productCounts);
+            renderRecentOrders(orders);
+        }
+
+        // يعرض أكثر المنتجات/الاشتراكات استخدامًا كقائمة بأشرطة نسبية
+        function renderTopProducts(productCounts) {
+            const box = document.getElementById('topProductsList');
+            const entries = Object.entries(productCounts).sort((a, b) => b[1].count - a[1].count).slice(0, 5);
+
+            if (!entries.length) {
+                box.innerHTML = '<div class="search-empty">لا توجد بيانات بعد</div>';
+                return;
+            }
+
+            const max = entries[0][1].count;
+            box.innerHTML = entries.map(([name, info]) => `
+                <div class="top-product-row">
+                    <i class="tpr-icon ${info.icon}"></i>
+                    <span class="tpr-name">${name}</span>
+                    <div class="tpr-bar-wrap"><div class="tpr-bar" style="width:${Math.max(8, Math.round(info.count / max * 100))}%"></div></div>
+                    <span class="tpr-count">${info.count}</span>
+                </div>
+            `).join('');
+        }
+
+        // يعرض آخر 30 طلب مع إمكانية عرض التفاصيل / التعديل / الحذف لكل طلب
+        function renderRecentOrders(orders) {
+            const box = document.getElementById('recentOrdersList');
+            const recent = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 30);
+
+            if (!recent.length) {
+                box.innerHTML = '<div class="search-empty">لا توجد طلبات محفوظة بعد</div>';
+                return;
+            }
+
+            box.innerHTML = recent.map(o => {
+                const isActive = daysRemaining(o.expiryDate) >= 0;
+                return `
+                <div class="order-list-item">
+                    <div class="oli-main" onclick="openOrderModal(${o.id})">
+                        <div class="oli-top">
+                            <i class="${o.serviceIcon || 'fa-solid fa-tv'}"></i>
+                            <span>${o.service || ''}</span>
+                            <span class="oli-id">#${o.id}</span>
+                            <span class="status-pill ${isActive ? 'active' : 'expired'}">${isActive ? '✅ نشط' : '⛔ منتهي'}</span>
+                        </div>
+                        <div class="oli-sub">${o.phone ? '📱 ' + o.phone + ' · ' : ''}${formatDateAr(o.purchaseDate)}</div>
+                    </div>
+                    <div class="oli-actions">
+                        <button class="icon-btn edit-btn" title="تعديل" onclick="event.stopPropagation(); loadOrderIntoCard(${o.id})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="icon-btn delete-btn" title="حذف" onclick="event.stopPropagation(); deleteOrder(${o.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // يحذف طلب نهائيًا من السجل (بعد تأكيد المستخدم) ويحدّث كل الشاشات المتأثرة
+        function deleteOrder(id) {
+            if (!confirm(`متأكد إنك تبي تحذف الطلب #${id}؟ 🗑️ ما يرجع بعد الحذف.`)) return;
+            const list = getOrders().filter(o => o.id !== id);
+            saveOrders(list);
+            renderStats();
+            closeOrderModal();
+            if (document.getElementById('searchInput').value.trim()) runSearch();
+            showToast(`تم حذف الطلب #${id} 🗑️`);
+        }
+
+        // ============================================================
+        // مودال عرض تفاصيل الطلب (يفتح من قائمة آخر الطلبات أو نتائج البحث)
+        // ============================================================
+        function openOrderModal(id) {
+            const order = getOrders().find(o => o.id === id);
+            if (!order) return;
+
+            const isActive = daysRemaining(order.expiryDate) >= 0;
+            document.getElementById('modalTitle').innerHTML = `<i class="${order.serviceIcon || 'fa-solid fa-tv'}"></i> ${order.service || ''} · <span class="status-pill ${isActive ? 'active' : 'expired'}">${isActive ? '✅ نشط' : '⛔ منتهي'}</span>`;
+
+            document.getElementById('modalBody').innerHTML = `
+                <div class="modal-row"><span class="mr-label"><i class="fa-solid fa-ticket"></i> رقم الطلب</span><span class="mr-value">#${order.id}</span></div>
+                <div class="modal-row"><span class="mr-label"><i class="fa-solid fa-phone"></i> جوال العميل</span><span class="mr-value">${order.phone || '—'}</span></div>
+                <div class="modal-row"><span class="mr-label"><i class="fa-regular fa-envelope"></i> البريد</span><span class="mr-value">${order.email || '—'}</span></div>
+                <div class="modal-row"><span class="mr-label"><i class="fa-solid fa-key"></i> كلمة المرور</span><span class="mr-value">${order.password || '—'}</span></div>
+                <div class="modal-row"><span class="mr-label"><i class="fa-regular fa-calendar-check"></i> المدة</span><span class="mr-value">${order.duration || '—'}</span></div>
+                <div class="modal-row"><span class="mr-label"><i class="fa-regular fa-calendar"></i> تاريخ الشراء</span><span class="mr-value">${formatDateAr(order.purchaseDate)}</span></div>
+                <div class="modal-row"><span class="mr-label"><i class="fa-solid fa-hourglass-end"></i> ينتهي في</span><span class="mr-value">${formatDateAr(order.expiryDate)}</span></div>
+            `;
+
+            document.getElementById('modalEditBtn').onclick = () => { closeOrderModal(); loadOrderIntoCard(id); };
+            document.getElementById('modalDeleteBtn').onclick = () => deleteOrder(id);
+
+            document.getElementById('orderModal').hidden = false;
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').hidden = true;
         }
 
         function selectService(serviceName, iconClass, btn) {
@@ -1355,7 +1725,7 @@
         // قبل ما نفتح نافذة الطباعة، عشان ما تطلع الأيقونات مربعات فاضية
         // أو النص يطلع بخط بديل (وهذا كان أحد أسباب "الشكل المعطوب" بالـ PDF).
         function printSafely() {
-            upsertCurrentOrder();
+            commitOrder();
             const btn = document.getElementById('printBtn');
             btn.disabled = true;
             const originalHTML = btn.innerHTML;
@@ -1382,7 +1752,7 @@
         // html-to-image التي ترسم العنصر عبر SVG <foreignObject> فعليًا (نفس محرك
         // رسم المتصفح الحقيقي)، فتحافظ على التدرجات والخطوط والأيقونات بدقّة.
         function downloadAsImage() {
-            upsertCurrentOrder();
+            commitOrder();
             const btn = document.getElementById('downloadBtn');
             const card = document.querySelector('.card-wrapper');
             const hiddenEls = document.querySelectorAll('.card-wrapper .no-print');
