@@ -1019,13 +1019,7 @@
                 <span class="badge-info" id="displayDuration"><i class="fa-regular fa-calendar-check"></i> شهر واحد</span>
             </div>
 
-            <!-- تاريخ الشراء (تاريخ الانتهاء تقريبي فقط ويبقى بالداشبورد ولا يظهر للعميل) -->
-            <div class="order-meta order-meta-single">
-                <div class="om-box">
-                    <div class="om-label">🗓️ تاريخ الشراء</div>
-                    <div class="om-value" id="cardPurchaseDate">--</div>
-                </div>
-            </div>
+            <!-- تاريخ الشراء لا يظهر بالبطاقة المُصدّرة إطلاقًا (يبقى بالداشبورد فقط) -->
 
             <!-- خط فاصل بشكل تذكرة -->
             <div class="ticket-divider"></div>
@@ -1198,10 +1192,9 @@
             document.getElementById('opExpiry').textContent = formatDateAr(currentOrder.expiryDate);
 
             document.getElementById('cardOrderId').textContent = idText;
-            document.getElementById('cardPurchaseDate').textContent = formatDateAr(currentOrder.purchaseDate);
 
-            // تاريخ الانتهاء والمدة المتبقية يبقيان داخليين بالداشبورد فقط (op-expiry)
-            // ولا يُطبعان بالبطاقة المُصدّرة، لأن مدة الاشتراك الفعلية تقريبية.
+            // تاريخ الشراء والانتهاء يبقيان داخليين بالداشبورد فقط (op-purchase / op-expiry)
+            // ولا يُطبعان بالبطاقة المُصدّرة إطلاقًا.
         }
 
         // ============================================================
