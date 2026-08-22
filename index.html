@@ -48,13 +48,9 @@
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg);
-            /* نفس تدرجات الأحمر/الذهبي المستخدمة بالبطاقة المُصدّرة (صورة/PDF) —
-               عشان خلفية الموقع تطابق شكل التصدير النهائي بدل ما تكون سودا فاضية */
             background-image:
-                radial-gradient(ellipse 900px 500px at 50% -10%, rgba(255, 15, 43, 0.28), transparent 60%),
-                radial-gradient(ellipse 700px 450px at 20% 15%, rgba(255, 15, 43, 0.2), transparent 60%),
-                radial-gradient(ellipse 600px 450px at 100% 25%, rgba(242, 193, 78, 0.18), transparent 60%),
-                radial-gradient(ellipse 500px 500px at 50% 100%, rgba(255, 77, 94, 0.14), transparent 60%);
+                radial-gradient(ellipse 900px 500px at 50% -10%, rgba(255, 15, 43, 0.16), transparent 60%),
+                radial-gradient(ellipse 600px 400px at 100% 20%, rgba(242, 193, 78, 0.05), transparent 60%);
             background-repeat: no-repeat;
             color: var(--text);
             min-height: 100vh;
@@ -813,17 +809,6 @@
 
         .stat-emoji-icon { font-size: 1.5rem; line-height: 1; margin-bottom: 6px; }
 
-        /* حاوية معزولة اتجاهيًا حول الإيموجي داخل البطاقة المُصدّرة —
-           تمنع خوارزمية bidi من إعادة ترتيب/تقسيم زوج UTF-16 الخاص
-           بالإيموجي وسط النص العربي (RTL) وقت تحويل البطاقة لـ SVG
-           بمكتبة html-to-image، وهذا كان سبب ظهور الإيموجي كرمز هكس
-           ناقص/مربع فاضٍ (زي "DF") بدل الشكل الصحيح بالصورة/PDF المصدّر. */
-        .emoji-guard {
-            display: inline-block;
-            unicode-bidi: isolate;
-            direction: ltr;
-        }
-
         /* عناوين فرعية داخل تبويب الإحصائيات */
         .stats-subhead {
             display: flex;
@@ -1246,8 +1231,8 @@
                 </div>
 
                 <div class="actions">
-                    <button class="btn btn-primary" id="printBtn" onclick="downloadAsPDF()">
-                        <i class="fa-solid fa-file-pdf"></i> تحميل كـ PDF
+                    <button class="btn btn-primary" id="printBtn" onclick="printSafely()">
+                        <i class="fa-solid fa-print"></i> طباعة / تصدير كـ PDF
                     </button>
                     <button class="btn btn-secondary" id="downloadBtn" onclick="downloadAsImage()">
                         <i class="fa-solid fa-download"></i> تحميل كصورة
@@ -1417,7 +1402,7 @@
 
             <!-- شارة رقم الطلب -->
             <div class="order-badge-wrap">
-                <span class="order-badge"><i class="fa-solid fa-ticket"></i> <span class="emoji-guard">🎟️</span> طلب رقم <span class="order-badge-num" id="cardOrderId">#-----</span></span>
+                <span class="order-badge"><i class="fa-solid fa-ticket"></i> 🎟️ طلب رقم <span class="order-badge-num" id="cardOrderId">#-----</span></span>
             </div>
 
             <!-- شعار الاشتراك المختار - بتصميم المتجر -->
@@ -1471,7 +1456,7 @@
                 </div>
             </div>
 
-            <div class="note">استمتع باشتراكك! <span class="emoji-guard">❤️</span></div>
+            <div class="note">استمتع باشتراكك! ❤️</div>
 
             <!-- دعم واتساب بالباركود -->
             <div class="support-wrap">
@@ -1504,10 +1489,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- jsPDF: نستخدمها لبناء ملف PDF من نفس صورة PNG اللي تصدرها البطاقة،
-         بدل الاعتماد على محرك طباعة المتصفح (window.print) — انظر التعليق
-         فوق downloadAsPDF() لتفاصيل سبب استبداله. -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         // باركود يفتح محادثة واتساب الدعم مباشرة عند مسحه
         new QRCode(document.getElementById("qrcode"), {
@@ -1590,7 +1571,7 @@
             }
 
             // ملاحظة مهمة: الطلب ما يُحفظ بالسجل ولا يُحتسب بالإحصائيات إلا لما
-            // المستخدم فعليًا يصدّره كـ PDF أو صورة (شوف commitOrder + downloadAsPDF/downloadAsImage).
+            // المستخدم فعليًا يصدّره كـ PDF أو صورة (شوف commitOrder + printSafely/downloadAsImage).
             // كذا فتح الصفحة أو عمل ريفرش ما يزيد العداد.
             renderOrderPreview();
             renderStats();
@@ -2120,24 +2101,7 @@
         // ننتظر خطوط Google Fonts + كل خطوط أيقونات Font Awesome (Free/Brands/Regular)
         // لحالها بالإضافة لـ document.fonts.ready، لأن بعض الأحيان الوعد العام يتحل
         // قبل ما يكتمل تحميل ملف خط الأيقونات نفسه، فتطلع الأيقونات مربعات فاضية
-        // بالصورة أو ملف الـ PDF المصدّر.
-        //
-        // ملاحظة مهمة عن الـ PDF: كنا نعتمد على window.print() (طباعة المتصفح)
-        // مع @page بحجم ثابت (135mm×195mm) عشان يطلع PDF بحجم الكرت بالضبط.
-        // المشكلة إن هذا يعتمد كليًا على محرك الطباعة بجهاز المستخدم:
-        // - أغلب متصفحات الجوال (وبعض متصفحات الديسكتوب) تتجاهل حجم @page
-        //   المخصص وتفرض ورق افتراضي (A4/Letter)، فيطلع الكرت إما مصغّر
-        //   بمنتصف صفحة كبيرة فاضية، أو مكبّر ومقصوص لأن نسبة الطول والعرض
-        //   ما تطابق ورقة A4.
-        // - لو محتوى الكرت أطول من ارتفاع @page المحدد سلفًا، overflow:hidden
-        //   يقص الجزء الزايد بدل ما يكبّر الصفحة.
-        // - المستخدم نفسه قد يغيّر إعدادات الحجم/الهوامش/المقياس بنافذة
-        //   الطباعة بدون قصد.
-        // الحل: نبني الـ PDF برمجيًا من نفس صورة PNG اللي تصدرها البطاقة
-        // (نفس خط أنابيب downloadAsImage الموثوق)، ونجعل حجم صفحة الـ PDF
-        // يطابق أبعاد الصورة الفعلية بالبكسل تمامًا — بهذا الشكل ما فيه أي
-        // اعتماد على محرك طباعة المتصفح أو إعدادات الورق، والنتيجة مطابقة
-        // 100% للصورة اللي تنزل من زر "تحميل كصورة".
+        // بالطباعة أو بالصورة المصدّرة.
         function waitForFontsReady() {
             const families = [
                 '900 1em "Font Awesome 6 Free"',
@@ -2155,121 +2119,70 @@
             return Promise.all([ready, ...loaders]);
         }
 
-        // ننتظر تحميل كل الصور (خصوصًا صور Twemoji) داخل عنصر معيّن قبل التصوير،
-        // عشان ما تطلع الصورة النهائية وبعض أيقونات الإيموجي لسا ما اكتملت.
-        function waitForImagesLoaded(container) {
-            const imgs = Array.from(container.querySelectorAll('img'));
-            return Promise.all(imgs.map(img => {
-                if (img.complete && img.naturalWidth !== 0) return Promise.resolve();
-                return new Promise(resolve => {
-                    img.addEventListener('load', resolve, { once: true });
-                    img.addEventListener('error', resolve, { once: true });
-                });
-            }));
-        }
-
-        // الدالة المشتركة اللي تصوّر البطاقة كصورة PNG نظيفة — يستخدمها زر
-        // "تحميل كصورة" وزر "تحميل كـ PDF" كلاهما، عشان يطلعوا مطابقين تمامًا.
-        // تخفي عناصر التحكم (no-print) مؤقتًا، ثم ترسم عبر html-to-image
-        // (SVG <foreignObject>) اللي يحافظ على التدرجات اللونية بدقّة أعلى
-        // من html2canvas.
-        //
-        // ملاحظة عن أيقونات/شعارات الاشتراك (Font Awesome): كانت أحيانًا
-        // تطلع فاضية أو مفقودة بالصورة/PDF المصدّر. السبب إن html-to-image
-        // يحوّل البطاقة لنص SVG يعتمد فيه على خطوط Font Awesome/Google Fonts
-        // كملفات خارجية (@font-face بروابط cdnjs/fonts.googleapis)، وبعض
-        // المتصفحات ما تكمل تحميل هذي الخطوط بالوقت المناسب لما تحمّل صورة
-        // الـ SVG الناتجة (خصوصًا لو كانت أول مرة تفتح الصفحة). الحل الموثوق
-        // هو نطلب من html-to-image نفسها تدمج ملفات الخطوط المستخدمة فعليًا
-        // كبيانات base64 داخل الـ SVG مباشرة (getFontEmbedCSS)، فتصير الصورة
-        // مستقلة تمامًا عن تحميل الخطوط بالمتصفح وقت الرسم.
-        function captureCardPng() {
-            const card = document.querySelector('.card-wrapper');
-            const hiddenEls = document.querySelectorAll('.card-wrapper .no-print');
-
-            hiddenEls.forEach(el => el.style.visibility = 'hidden');
-
-            return waitForFontsReady()
-                .then(() => waitForImagesLoaded(card))
-                .then(() => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res))))
-                .then(() => (htmlToImage.getFontEmbedCSS ? htmlToImage.getFontEmbedCSS(card).catch(() => '') : Promise.resolve('')))
-                .then(fontEmbedCSS => htmlToImage.toPng(card, {
-                    backgroundColor: '#09090a',
-                    pixelRatio: 3,
-                    cacheBust: true,
-                    skipFonts: false,
-                    fontEmbedCSS
-                }))
-                .then(dataUrl => {
-                    hiddenEls.forEach(el => el.style.visibility = '');
-                    return dataUrl;
-                })
-                .catch(err => {
-                    hiddenEls.forEach(el => el.style.visibility = '');
-                    throw err;
-                });
-        }
-
-        // تحميل البطاقة كصورة PNG مباشرة على الجهاز
-        function downloadAsImage() {
-            commitOrder();
-            const btn = document.getElementById('downloadBtn');
-            btn.disabled = true;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التجهيز...';
-
-            captureCardPng()
-                .then(dataUrl => {
-                    const link = document.createElement('a');
-                    link.download = 'تسليم-الاشتراك.png';
-                    link.href = dataUrl;
-                    link.click();
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                })
-                .catch(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                    showToast("تعذّر إنشاء الصورة، حاول مرة ثانية");
-                });
-        }
-
-        // تحميل البطاقة كملف PDF — نبني الـ PDF من نفس صورة PNG المولّدة أعلاه
-        // بدل الاعتماد على window.print()، وحجم صفحة الـ PDF يطابق أبعاد
-        // الصورة بالبكسل بالضبط، فما فيه فراغ زايد ولا قص ولا تكبير غريب
-        // بغض النظر عن جهاز أو متصفح المستخدم.
-        function downloadAsPDF() {
+        // نضمن ان خطوط Google Fonts وأيقونات Font Awesome خلصت تحميل
+        // قبل ما نفتح نافذة الطباعة، عشان ما تطلع الأيقونات مربعات فاضية
+        // أو النص يطلع بخط بديل (وهذا كان أحد أسباب "الشكل المعطوب" بالـ PDF).
+        function printSafely() {
             commitOrder();
             const btn = document.getElementById('printBtn');
             btn.disabled = true;
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التجهيز...';
 
-            captureCardPng()
-                .then(dataUrl => new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.onload = () => resolve({ dataUrl, width: img.naturalWidth, height: img.naturalHeight });
-                    img.onerror = reject;
-                    img.src = dataUrl;
-                }))
-                .then(({ dataUrl, width, height }) => {
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF({
-                        orientation: height >= width ? 'portrait' : 'landscape',
-                        unit: 'px',
-                        format: [width, height],
-                        compress: true
+            waitForFontsReady().then(() => {
+                // فريم إضافي عشان يضمن أن كل شي اترسم فعليًا قبل فتح حوار الطباعة
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        window.print();
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
                     });
-                    pdf.addImage(dataUrl, 'PNG', 0, 0, width, height);
-                    pdf.save('تسليم-الاشتراك.pdf');
+                });
+            });
+        }
+        // تحميل البطاقة كصورة PNG مباشرة على الجهاز
+        // نخفي مؤقتاً كل عناصر التحكم (no-print) عشان الصورة تطلع نظيفة
+        // بنفس شكل الطباعة بالضبط، ثم نرجعها بعد التصوير.
+        //
+        // ملاحظة: كنا نستخدم html2canvas، لكنه معروف بمشاكل واضحة مع التدرجات
+        // اللونية على النص (background-clip: text) وأيقونات Font Awesome —
+        // كانت تطلع بيضاء/سوداء فاضية أو مشوّهة بالصورة النهائية. استبدلناها بمكتبة
+        // html-to-image التي ترسم العنصر عبر SVG <foreignObject> فعليًا (نفس محرك
+        // رسم المتصفح الحقيقي)، فتحافظ على التدرجات والخطوط والأيقونات بدقّة.
+        function downloadAsImage() {
+            commitOrder();
+            const btn = document.getElementById('downloadBtn');
+            const card = document.querySelector('.card-wrapper');
+            const hiddenEls = document.querySelectorAll('.card-wrapper .no-print');
 
+            btn.disabled = true;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التجهيز...';
+
+            hiddenEls.forEach(el => el.style.visibility = 'hidden');
+
+            waitForFontsReady().then(() => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res))))
+                .then(() => htmlToImage.toPng(card, {
+                    backgroundColor: '#09090a',
+                    pixelRatio: 3,
+                    cacheBust: true,
+                    skipFonts: false
+                }))
+                .then(dataUrl => {
+                    const link = document.createElement('a');
+                    link.download = 'تسليم-الاشتراك.png';
+                    link.href = dataUrl;
+                    link.click();
+
+                    hiddenEls.forEach(el => el.style.visibility = '');
                     btn.disabled = false;
                     btn.innerHTML = originalHTML;
                 })
                 .catch(() => {
+                    hiddenEls.forEach(el => el.style.visibility = '');
                     btn.disabled = false;
                     btn.innerHTML = originalHTML;
-                    showToast("تعذّر إنشاء PDF، حاول مرة ثانية");
+                    showToast("تعذّر إنشاء الصورة، حاول مرة ثانية");
                 });
         }
 
