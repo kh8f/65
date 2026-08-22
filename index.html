@@ -448,6 +448,285 @@
         }
 
         /* =========================================================
+           تبويبات لوحة التحكم (طلب جديد / بحث / إحصائيات)
+        ========================================================= */
+        .dash-tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 5px;
+            margin-bottom: 18px;
+        }
+
+        .dash-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-radius: 50px;
+            color: var(--text-dim);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 9px 4px;
+            cursor: pointer;
+            transition: all .25s var(--ease);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .dash-tab-btn:hover { color: var(--text); }
+
+        .dash-tab-btn.active {
+            background: linear-gradient(90deg, var(--red-soft), var(--red));
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 15, 43, 0.3);
+        }
+
+        .dash-panel { animation: panelIn .35s var(--ease); }
+        .dash-panel[hidden] { display: none; }
+
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* بطاقة معاينة الطلب الحالي داخل لوحة التحكم */
+        .order-preview {
+            background: linear-gradient(135deg, rgba(242, 193, 78, 0.08), rgba(255, 15, 43, 0.08));
+            border: 1px dashed var(--border-hover);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 18px;
+        }
+
+        .order-preview .op-id {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-preview .op-id-value {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--gold);
+            direction: ltr;
+        }
+
+        .order-preview .op-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        .order-preview .op-grid b {
+            display: block;
+            color: var(--text);
+            font-size: 0.82rem;
+            margin-top: 2px;
+        }
+
+        .btn-ghost {
+            width: 100%;
+            margin-top: 12px;
+            padding: 9px;
+            border-radius: 50px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: 1px solid var(--border-hover);
+            background: transparent;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all .2s var(--ease);
+        }
+
+        .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
+
+        .btn-ghost.pulse { animation: ghostPulse .5s var(--ease); }
+        @keyframes ghostPulse {
+            0% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.45); }
+            100% { box-shadow: 0 0 0 10px rgba(242, 193, 78, 0); }
+        }
+
+        /* البحث */
+        .search-input-wrapper { position: relative; margin-bottom: 14px; }
+
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 11px 40px 11px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-input-wrapper input:focus { border-color: var(--gold); }
+
+        .search-input-wrapper i {
+            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--text-dimmer);
+        }
+
+        .search-results { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; }
+
+        .search-empty {
+            text-align: center;
+            color: var(--text-dimmer);
+            font-size: 0.85rem;
+            padding: 24px 10px;
+        }
+
+        .search-result-item {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all .2s var(--ease);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .search-result-item:hover { border-color: var(--gold); background: rgba(242, 193, 78, 0.06); }
+
+        .search-result-item .sri-main { font-size: 0.85rem; font-weight: 700; }
+        .search-result-item .sri-sub { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; }
+        .search-result-item .sri-id { color: var(--gold); font-weight: 800; direction: ltr; font-size: 0.85rem; }
+
+        /* الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 8px;
+            text-align: center;
+            transition: transform .25s var(--ease), border-color .25s var(--ease);
+        }
+
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+
+        .stat-icon {
+            width: 34px;
+            height: 34px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg { width: 100%; height: 100%; }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--gold), var(--red-soft));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .stats-footnote {
+            text-align: center;
+            font-size: 0.72rem;
+            color: var(--text-dimmer);
+            margin-top: 14px;
+        }
+
+        /* شارة رقم الطلب على البطاقة المُصدّرة */
+        .order-badge-wrap {
+            display: flex;
+            justify-content: center;
+            margin: 2px 0 14px;
+        }
+
+        .order-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(9, 9, 10, 0.5);
+            border: 1px dashed var(--gold);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .order-badge .order-badge-num { direction: ltr; }
+
+        /* معلومات تاريخ الشراء والمدة المتبقية على البطاقة المُصدّرة */
+        .order-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .order-meta .om-box {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 10px;
+            text-align: center;
+        }
+
+        .order-meta .om-label {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .order-meta .om-value {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .order-remaining {
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .order-remaining.expired { color: var(--red-soft); }
+
+        /* =========================================================
            إعدادات الطباعة/PDF — مصلّحة
            - @page بحجم ثابت يطابق الكرت (مو A4 كامل) عشان يطلع
              مستطيل نظيف بدون صفحة ثانية وبدون فراغ زايد.
@@ -515,6 +794,19 @@
                 color: #ffffff !important;
                 padding-left: 14px !important;
             }
+
+            /* بعض محركات الطباعة/تصدير PDF (خصوصًا الطباعة الافتراضية بالجوال)
+               لا تدعم background-clip: text بشكل موثوق، فيطلع النص شفاف تمامًا
+               وكأنه "مو مطبوع". نلغي حيلة التدرج وقت الطباعة ونستخدم لون ذهبي
+               صلب بدلها عشان النص يضمن يطلع واضح مهما كان جهاز الطباعة. */
+            .title .accent,
+            .signature {
+                background: none !important;
+                -webkit-background-clip: initial !important;
+                background-clip: initial !important;
+                -webkit-text-fill-color: currentColor !important;
+                color: var(--gold) !important;
+            }
         }
     </style>
 </head>
@@ -526,39 +818,139 @@
 
         <!-- لوحة التحكم - خارج بطاقة التصدير تماماً -->
         <div class="dashboard-controls no-print">
-            <span class="dash-title"><i class="fa-solid fa-sliders"></i> لوحة التحكم</span>
+            <span class="dash-title"><i class="fa-solid fa-sliders"></i> لوحة التحكم 🎛️</span>
 
-            <span class="section-label"><i class="fa-solid fa-list-check"></i> اختر نوع الاشتراك</span>
-            <div class="options-grid-4 service-grid">
-                <button class="opt-btn active" onclick="selectService('يوتيوب فردي', 'fa-brands fa-youtube', this)">
-                    <i class="fa-brands fa-youtube"></i> فردي
-                </button>
-                <button class="opt-btn" onclick="selectService('يوتيوب عائلي', 'fa-solid fa-users', this)">
-                    <i class="fa-solid fa-users"></i> عائلي
-                </button>
-                <button class="opt-btn" onclick="selectService('شاهد VIP', 'fa-solid fa-clapperboard', this)">
-                    <i class="fa-solid fa-clapperboard"></i> شاهد
-                </button>
-                <button class="opt-btn" onclick="selectService('MASOUB TV', 'fa-solid fa-tv', this)">
-                    <i class="fa-solid fa-tv"></i> Masoub TV
-                </button>
+            <div class="dash-tabs">
+                <button class="dash-tab-btn active" id="tabBtnNew" onclick="switchTab('new')">🧾 طلب جديد</button>
+                <button class="dash-tab-btn" id="tabBtnSearch" onclick="switchTab('search')">🔍 بحث</button>
+                <button class="dash-tab-btn" id="tabBtnStats" onclick="switchTab('stats')">📊 إحصائيات</button>
             </div>
 
-            <span class="section-label"><i class="fa-regular fa-clock"></i> اختر مدة الاشتراك</span>
-            <div class="options-grid-4 duration-grid">
-                <button class="opt-btn active" onclick="selectDuration('شهر واحد', this)">شهر</button>
-                <button class="opt-btn" onclick="selectDuration('3 أشهر', this)">3 أشهر</button>
-                <button class="opt-btn" onclick="selectDuration('6 أشهر', this)">6 أشهر</button>
-                <button class="opt-btn" onclick="selectDuration('سنة واحدة', this)">سنة</button>
+            <!-- تبويب: طلب جديد -->
+            <div class="dash-panel" id="panelNew">
+
+                <div class="order-preview">
+                    <div class="op-id">
+                        <span class="section-label" style="margin:0;"><i class="fa-solid fa-ticket"></i> 🎟️ رقم الطلب</span>
+                        <span class="op-id-value" id="opIdValue">#-----</span>
+                    </div>
+                    <div class="op-grid">
+                        <span>🗓️ تاريخ الشراء<b id="opPurchase">--</b></span>
+                        <span>⏳ ينتهي في<b id="opExpiry">--</b></span>
+                    </div>
+                    <button class="btn-ghost" id="newOrderBtn" onclick="startNewOrder(true)">
+                        <i class="fa-solid fa-rotate"></i> طلب جديد (رقم جديد)
+                    </button>
+                </div>
+
+                <span class="section-label"><i class="fa-solid fa-mobile-screen-button"></i> 📱 رقم جوال العميل (لا يظهر بالتصدير)</span>
+                <div class="input-group" style="margin-bottom:16px;">
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone input-icon"></i>
+                        <input type="tel" id="customerPhone" class="input-field" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;" oninput="upsertCurrentOrder()">
+                    </div>
+                </div>
+
+                <span class="section-label"><i class="fa-solid fa-list-check"></i> اختر نوع الاشتراك</span>
+                <div class="options-grid-4 service-grid">
+                    <button class="opt-btn active" onclick="selectService('يوتيوب فردي', 'fa-brands fa-youtube', this)">
+                        <i class="fa-brands fa-youtube"></i> فردي
+                    </button>
+                    <button class="opt-btn" onclick="selectService('يوتيوب عائلي', 'fa-solid fa-users', this)">
+                        <i class="fa-solid fa-users"></i> عائلي
+                    </button>
+                    <button class="opt-btn" onclick="selectService('شاهد VIP', 'fa-solid fa-clapperboard', this)">
+                        <i class="fa-solid fa-clapperboard"></i> شاهد
+                    </button>
+                    <button class="opt-btn" onclick="selectService('MASOUB TV', 'fa-solid fa-tv', this)">
+                        <i class="fa-solid fa-tv"></i> Masoub TV
+                    </button>
+                </div>
+
+                <span class="section-label"><i class="fa-regular fa-clock"></i> اختر مدة الاشتراك</span>
+                <div class="options-grid-4 duration-grid">
+                    <button class="opt-btn active" data-days="30" onclick="selectDuration('شهر واحد', 30, this)">شهر</button>
+                    <button class="opt-btn" data-days="90" onclick="selectDuration('3 أشهر', 90, this)">3 أشهر</button>
+                    <button class="opt-btn" data-days="180" onclick="selectDuration('6 أشهر', 180, this)">6 أشهر</button>
+                    <button class="opt-btn" data-days="365" onclick="selectDuration('سنة واحدة', 365, this)">سنة</button>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" id="printBtn" onclick="printSafely()">
+                        <i class="fa-solid fa-print"></i> طباعة / تصدير كـ PDF
+                    </button>
+                    <button class="btn btn-secondary" id="downloadBtn" onclick="downloadAsImage()">
+                        <i class="fa-solid fa-download"></i> تحميل كصورة
+                    </button>
+                </div>
             </div>
 
-            <div class="actions">
-                <button class="btn btn-primary" id="printBtn" onclick="printSafely()">
-                    <i class="fa-solid fa-print"></i> طباعة / تصدير كـ PDF
-                </button>
-                <button class="btn btn-secondary" id="downloadBtn" onclick="downloadAsImage()">
-                    <i class="fa-solid fa-download"></i> تحميل كصورة
-                </button>
+            <!-- تبويب: البحث -->
+            <div class="dash-panel" id="panelSearch" hidden>
+                <span class="section-label"><i class="fa-solid fa-magnifying-glass"></i> 🔍 ابحث برقم الطلب أو رقم الجوال</span>
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" placeholder="مثال: 10482 أو 05xxxxxxxx" oninput="runSearch()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <div class="search-empty">اكتب رقم الطلب أو رقم جوال العميل للبحث 🔎</div>
+                </div>
+            </div>
+
+            <!-- تبويب: الإحصائيات -->
+            <div class="dash-panel" id="panelStats" hidden>
+                <span class="section-label"><i class="fa-solid fa-chart-simple"></i> 📊 عدّاد الطلبات</span>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="17" stroke="url(#statGrad)" stroke-width="3"/>
+                                <path d="M20 10v10l7 4" stroke="url(#statGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <defs>
+                                    <linearGradient id="statGrad" x1="3" y1="3" x2="37" y2="37" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#f2c14e"/>
+                                        <stop offset="100%" stop-color="#ff0f2b"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="stat-number" id="statToday">0</div>
+                        <div class="stat-label">🟢 اليوم</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="8" width="30" height="27" rx="4" stroke="url(#statGrad2)" stroke-width="3"/>
+                                <path d="M5 16h30M13 4v7M27 4v7" stroke="url(#statGrad2)" stroke-width="3" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="statGrad2" x1="3" y1="3" x2="37" y2="37" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#f2c14e"/>
+                                        <stop offset="100%" stop-color="#ff0f2b"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="stat-number" id="statWeek">0</div>
+                        <div class="stat-label">📆 هذا الأسبوع</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 34V18l12-10 12 10v16H8Z" stroke="url(#statGrad3)" stroke-width="3" stroke-linejoin="round" fill="none"/>
+                                <path d="M16 34v-9h8v9" stroke="url(#statGrad3)" stroke-width="3" stroke-linejoin="round" fill="none"/>
+                                <defs>
+                                    <linearGradient id="statGrad3" x1="3" y1="3" x2="37" y2="37" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#f2c14e"/>
+                                        <stop offset="100%" stop-color="#ff0f2b"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="stat-number" id="statMonth">0</div>
+                        <div class="stat-label">🗓️ هذا الشهر</div>
+                    </div>
+                </div>
+                <div class="stats-footnote" id="statsTotal">إجمالي الطلبات المحفوظة: 0 📦</div>
             </div>
         </div>
 
@@ -597,6 +989,11 @@
             <h1 class="title">شكراً <span class="accent">لشرائكم منا</span></h1>
             <p class="subtitle">تفضل معلومات حسابك الخاص بالاشتراك</p>
 
+            <!-- شارة رقم الطلب -->
+            <div class="order-badge-wrap">
+                <span class="order-badge"><i class="fa-solid fa-ticket"></i> 🎟️ طلب رقم <span class="order-badge-num" id="cardOrderId">#-----</span></span>
+            </div>
+
             <!-- شعار الاشتراك المختار - بتصميم المتجر -->
             <div class="sub-logo-wrap">
                 <div class="sub-logo-badge" id="subLogoBadge">
@@ -610,6 +1007,19 @@
                 <span class="badge-info" id="displayService"><i class="fa-brands fa-youtube"></i> يوتيوب فردي</span>
                 <span class="badge-info" id="displayDuration"><i class="fa-regular fa-calendar-check"></i> شهر واحد</span>
             </div>
+
+            <!-- تاريخ الشراء والمدة المتبقية -->
+            <div class="order-meta">
+                <div class="om-box">
+                    <div class="om-label">🗓️ تاريخ الشراء</div>
+                    <div class="om-value" id="cardPurchaseDate">--</div>
+                </div>
+                <div class="om-box">
+                    <div class="om-label">⏳ تاريخ الانتهاء</div>
+                    <div class="om-value" id="cardExpiryDate">--</div>
+                </div>
+            </div>
+            <div class="order-remaining" id="cardRemaining">-- يوم متبقي</div>
 
             <!-- خط فاصل بشكل تذكرة -->
             <div class="ticket-divider"></div>
@@ -664,7 +1074,7 @@
 
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // باركود يفتح محادثة واتساب الدعم مباشرة عند مسحه
@@ -676,18 +1086,247 @@
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
         });
+        // ============================================================
+        // إدارة الطلبات: رقم عشوائي لكل طلب + تاريخ الشراء + تاريخ الانتهاء
+        // كلها تُحفظ محليًا بالمتصفح (localStorage) — رقم جوال العميل لا
+        // يظهر إطلاقًا داخل البطاقة المُصدّرة (PDF/صورة)، هو للحفظ والبحث فقط.
+        // ============================================================
+        const ORDERS_KEY = 'masoub_orders';
+        let currentOrder = null;   // الطلب النشط حاليًا بلوحة التحكم
+        let currentDurationDays = 30;
+        let currentDurationText = 'شهر واحد';
+
+        function getOrders() {
+            try { return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; }
+            catch (e) { return []; }
+        }
+
+        function saveOrders(list) {
+            try { localStorage.setItem(ORDERS_KEY, JSON.stringify(list)); }
+            catch (e) { /* تجاهل — مثلاً وضع تصفح خاص لا يدعم التخزين */ }
+        }
+
+        function generateOrderId() {
+            const existing = new Set(getOrders().map(o => o.id));
+            let id;
+            do { id = Math.floor(10000 + Math.random() * 90000); } while (existing.has(id));
+            return id;
+        }
+
+        function addDays(date, days) {
+            const d = new Date(date);
+            d.setDate(d.getDate() + days);
+            return d;
+        }
+
+        function formatDateAr(date) {
+            return new Intl.DateTimeFormat('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(date));
+        }
+
+        function daysRemaining(expiryIso) {
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const expiry = new Date(expiryIso); expiry.setHours(0, 0, 0, 0);
+            return Math.round((expiry - today) / msPerDay);
+        }
+
+        // يبدأ طلب جديد: يولّد رقم طلب فريد + تاريخ شراء اليوم، ويصفّر الحقول
+        function startNewOrder(resetFields) {
+            const purchaseDate = new Date();
+            const expiryDate = addDays(purchaseDate, currentDurationDays);
+            currentOrder = {
+                id: generateOrderId(),
+                phone: resetFields ? '' : (document.getElementById('customerPhone').value || ''),
+                service: document.getElementById('subLogoLabel').textContent,
+                serviceIcon: document.getElementById('subLogoIcon').className,
+                duration: currentDurationText,
+                durationDays: currentDurationDays,
+                email: resetFields ? '' : document.getElementById('emailInput').value,
+                password: resetFields ? '' : document.getElementById('passInput').value,
+                purchaseDate: purchaseDate.toISOString(),
+                expiryDate: expiryDate.toISOString(),
+                createdAt: purchaseDate.toISOString()
+            };
+
+            if (resetFields) {
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('emailInput').value = '';
+                document.getElementById('passInput').value = '';
+                const btn = document.getElementById('newOrderBtn');
+                btn.classList.add('pulse');
+                setTimeout(() => btn.classList.remove('pulse'), 500);
+            }
+
+            saveOrders([...getOrders(), currentOrder]);
+            renderOrderPreview();
+            renderStats();
+        }
+
+        // يحدّث بيانات الطلب النشط في التخزين المحلي كل ما تغيّر حقل
+        // (الهاتف، البريد، كلمة المرور، الخدمة، المدة) دون توليد رقم جديد
+        function upsertCurrentOrder() {
+            if (!currentOrder) return;
+            currentOrder.phone = document.getElementById('customerPhone').value || '';
+            currentOrder.email = document.getElementById('emailInput').value || '';
+            currentOrder.password = document.getElementById('passInput').value || '';
+            currentOrder.service = document.getElementById('subLogoLabel').textContent;
+            currentOrder.serviceIcon = document.getElementById('subLogoIcon').className;
+            currentOrder.duration = currentDurationText;
+            currentOrder.durationDays = currentDurationDays;
+            const purchaseDate = new Date(currentOrder.purchaseDate);
+            currentOrder.expiryDate = addDays(purchaseDate, currentDurationDays).toISOString();
+
+            const list = getOrders();
+            const idx = list.findIndex(o => o.id === currentOrder.id);
+            if (idx > -1) list[idx] = currentOrder; else list.push(currentOrder);
+            saveOrders(list);
+            renderOrderPreview();
+        }
+
+        // يعرض بيانات الطلب النشط بلوحة التحكم وبالبطاقة المُصدّرة معًا
+        function renderOrderPreview() {
+            if (!currentOrder) return;
+            const idText = '#' + currentOrder.id;
+            document.getElementById('opIdValue').textContent = idText;
+            document.getElementById('opPurchase').textContent = formatDateAr(currentOrder.purchaseDate);
+            document.getElementById('opExpiry').textContent = formatDateAr(currentOrder.expiryDate);
+
+            document.getElementById('cardOrderId').textContent = idText;
+            document.getElementById('cardPurchaseDate').textContent = formatDateAr(currentOrder.purchaseDate);
+            document.getElementById('cardExpiryDate').textContent = formatDateAr(currentOrder.expiryDate);
+
+            const remain = daysRemaining(currentOrder.expiryDate);
+            const remainEl = document.getElementById('cardRemaining');
+            if (remain > 0) {
+                remainEl.textContent = `⏳ متبقي ${remain} يوم على الانتهاء`;
+                remainEl.classList.remove('expired');
+            } else if (remain === 0) {
+                remainEl.textContent = `⏳ ينتهي اليوم`;
+                remainEl.classList.remove('expired');
+            } else {
+                remainEl.textContent = `⚠️ الاشتراك منتهي`;
+                remainEl.classList.add('expired');
+            }
+        }
+
+        // ============================================================
+        // التبويبات
+        // ============================================================
+        function switchTab(name) {
+            const panels = { new: 'panelNew', search: 'panelSearch', stats: 'panelStats' };
+            const btns = { new: 'tabBtnNew', search: 'tabBtnSearch', stats: 'tabBtnStats' };
+            Object.keys(panels).forEach(k => {
+                document.getElementById(panels[k]).hidden = (k !== name);
+                document.getElementById(btns[k]).classList.toggle('active', k === name);
+            });
+            if (name === 'stats') renderStats();
+        }
+
+        // ============================================================
+        // البحث برقم الطلب أو رقم جوال العميل
+        // ============================================================
+        function runSearch() {
+            const q = document.getElementById('searchInput').value.trim().replace('#', '');
+            const box = document.getElementById('searchResults');
+            if (!q) { box.innerHTML = '<div class="search-empty">اكتب رقم الطلب أو رقم جوال العميل للبحث 🔎</div>'; return; }
+
+            const matches = getOrders()
+                .filter(o => String(o.id).includes(q) || (o.phone && o.phone.includes(q)))
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            if (!matches.length) {
+                box.innerHTML = '<div class="search-empty">ما لقينا أي طلب مطابق 🙁</div>';
+                return;
+            }
+
+            box.innerHTML = matches.slice(0, 30).map(o => `
+                <div class="search-result-item" onclick="loadOrderIntoCard(${o.id})">
+                    <div>
+                        <div class="sri-main"><i class="${o.serviceIcon || 'fa-solid fa-tv'}"></i> ${o.service || ''}</div>
+                        <div class="sri-sub">${o.phone ? '📱 ' + o.phone + ' · ' : ''}${formatDateAr(o.purchaseDate)}</div>
+                    </div>
+                    <div class="sri-id">#${o.id}</div>
+                </div>
+            `).join('');
+        }
+
+        // يحمّل طلب سابق من نتائج البحث مرة ثانية على البطاقة (لإعادة الطباعة/الإرسال)
+        function loadOrderIntoCard(id) {
+            const order = getOrders().find(o => o.id === id);
+            if (!order) return;
+            currentOrder = order;
+            currentDurationDays = order.durationDays || 30;
+            currentDurationText = order.duration || 'شهر واحد';
+
+            document.getElementById('customerPhone').value = order.phone || '';
+            document.getElementById('emailInput').value = order.email || '';
+            document.getElementById('passInput').value = order.password || '';
+            document.getElementById('displayService').innerHTML = `<i class="${order.serviceIcon}"></i> ${order.service}`;
+            document.getElementById('subLogoIcon').className = order.serviceIcon;
+            document.getElementById('subLogoLabel').textContent = order.service;
+            document.getElementById('displayDuration').innerHTML = `<i class="fa-regular fa-calendar-check"></i> ${order.duration}`;
+
+            document.querySelectorAll('.duration-grid .opt-btn').forEach(b => {
+                b.classList.toggle('active', parseInt(b.dataset.days, 10) === currentDurationDays);
+            });
+
+            renderOrderPreview();
+            switchTab('new');
+            showToast(`تم تحميل الطلب #${id} ✅`);
+        }
+
+        // ============================================================
+        // إحصائيات: عدد الطلبات اليوم / هذا الأسبوع / هذا الشهر
+        // ============================================================
+        function animateCounter(el, target) {
+            const start = 0;
+            const duration = 600;
+            const startTime = performance.now();
+            function tick(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                el.textContent = Math.round(start + (target - start) * progress);
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function renderStats() {
+            const orders = getOrders();
+            const now = new Date();
+            const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
+            const weekStart = new Date(todayStart); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            let today = 0, week = 0, month = 0;
+            orders.forEach(o => {
+                const d = new Date(o.createdAt);
+                if (d >= todayStart) today++;
+                if (d >= weekStart) week++;
+                if (d >= monthStart) month++;
+            });
+
+            animateCounter(document.getElementById('statToday'), today);
+            animateCounter(document.getElementById('statWeek'), week);
+            animateCounter(document.getElementById('statMonth'), month);
+            document.getElementById('statsTotal').textContent = `إجمالي الطلبات المحفوظة: ${orders.length} 📦`;
+        }
+
         function selectService(serviceName, iconClass, btn) {
             document.querySelectorAll('.service-grid .opt-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById('displayService').innerHTML = `<i class="${iconClass}"></i> ${serviceName}`;
             document.getElementById('subLogoIcon').className = iconClass;
             document.getElementById('subLogoLabel').textContent = serviceName;
+            upsertCurrentOrder();
         }
 
-        function selectDuration(durationText, btn) {
+        function selectDuration(durationText, days, btn) {
             document.querySelectorAll('.duration-grid .opt-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById('displayDuration').innerHTML = `<i class="fa-regular fa-calendar-check"></i> ${durationText}`;
+            currentDurationText = durationText;
+            currentDurationDays = days;
+            upsertCurrentOrder();
         }
 
         function copyToClipboard(elementId) {
@@ -703,20 +1342,38 @@
             setTimeout(() => toast.classList.remove('show'), 2200);
         }
 
+        // ننتظر خطوط Google Fonts + كل خطوط أيقونات Font Awesome (Free/Brands/Regular)
+        // لحالها بالإضافة لـ document.fonts.ready، لأن بعض الأحيان الوعد العام يتحل
+        // قبل ما يكتمل تحميل ملف خط الأيقونات نفسه، فتطلع الأيقونات مربعات فاضية
+        // بالطباعة أو بالصورة المصدّرة.
+        function waitForFontsReady() {
+            const families = [
+                '900 1em "Font Awesome 6 Free"',
+                '400 1em "Font Awesome 6 Free"',
+                '400 1em "Font Awesome 6 Brands"',
+                '700 1em "Tajawal"',
+                '800 1em "Tajawal"'
+            ];
+            const loaders = (document.fonts && document.fonts.load)
+                ? families.map(f => document.fonts.load(f).catch(() => {}))
+                : [];
+            const ready = (document.fonts && document.fonts.ready)
+                ? document.fonts.ready
+                : Promise.resolve();
+            return Promise.all([ready, ...loaders]);
+        }
+
         // نضمن ان خطوط Google Fonts وأيقونات Font Awesome خلصت تحميل
         // قبل ما نفتح نافذة الطباعة، عشان ما تطلع الأيقونات مربعات فاضية
         // أو النص يطلع بخط بديل (وهذا كان أحد أسباب "الشكل المعطوب" بالـ PDF).
         function printSafely() {
+            upsertCurrentOrder();
             const btn = document.getElementById('printBtn');
             btn.disabled = true;
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التجهيز...';
 
-            const ready = (document.fonts && document.fonts.ready)
-                ? document.fonts.ready
-                : Promise.resolve();
-
-            ready.then(() => {
+            waitForFontsReady().then(() => {
                 // فريم إضافي عشان يضمن أن كل شي اترسم فعليًا قبل فتح حوار الطباعة
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
@@ -729,8 +1386,15 @@
         }
         // تحميل البطاقة كصورة PNG مباشرة على الجهاز
         // نخفي مؤقتاً كل عناصر التحكم (no-print) عشان الصورة تطلع نظيفة
-        // بنفس شكل الطباعة بالضبط، ثم نرجعها بعد التصوير
+        // بنفس شكل الطباعة بالضبط، ثم نرجعها بعد التصوير.
+        //
+        // ملاحظة: كنا نستخدم html2canvas، لكنه معروف بمشاكل واضحة مع التدرجات
+        // اللونية على النص (background-clip: text) وأيقونات Font Awesome —
+        // كانت تطلع بيضاء/سوداء فاضية أو مشوّهة بالصورة النهائية. استبدلناها بمكتبة
+        // html-to-image التي ترسم العنصر عبر SVG <foreignObject> فعليًا (نفس محرك
+        // رسم المتصفح الحقيقي)، فتحافظ على التدرجات والخطوط والأيقونات بدقّة.
         function downloadAsImage() {
+            upsertCurrentOrder();
             const btn = document.getElementById('downloadBtn');
             const card = document.querySelector('.card-wrapper');
             const hiddenEls = document.querySelectorAll('.card-wrapper .no-print');
@@ -741,32 +1405,34 @@
 
             hiddenEls.forEach(el => el.style.visibility = 'hidden');
 
-            const ready = (document.fonts && document.fonts.ready)
-                ? document.fonts.ready
-                : Promise.resolve();
-
-            ready.then(() => requestAnimationFrame(() => requestAnimationFrame(() => {
-                html2canvas(card, {
+            waitForFontsReady().then(() => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res))))
+                .then(() => htmlToImage.toPng(card, {
                     backgroundColor: '#09090a',
-                    scale: 3,
-                    useCORS: true
-                }).then(canvas => {
+                    pixelRatio: 3,
+                    cacheBust: true,
+                    skipFonts: false
+                }))
+                .then(dataUrl => {
                     const link = document.createElement('a');
                     link.download = 'تسليم-الاشتراك.png';
-                    link.href = canvas.toDataURL('image/png');
+                    link.href = dataUrl;
                     link.click();
 
                     hiddenEls.forEach(el => el.style.visibility = '');
                     btn.disabled = false;
                     btn.innerHTML = originalHTML;
-                }).catch(() => {
+                })
+                .catch(() => {
                     hiddenEls.forEach(el => el.style.visibility = '');
                     btn.disabled = false;
                     btn.innerHTML = originalHTML;
                     showToast("تعذّر إنشاء الصورة، حاول مرة ثانية");
                 });
-            })));
         }
+
+        // تهيئة أولية عند فتح الصفحة: نولّد رقم طلب جديد جاهز ونحسب الإحصائيات
+        startNewOrder(false);
+        renderStats();
     </script>
 </body>
 </html>
