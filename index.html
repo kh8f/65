@@ -716,6 +716,17 @@
             color: var(--text);
         }
 
+        /* على البطاقة المُصدّرة نعرض تاريخ الشراء فقط (بدون تاريخ الانتهاء
+           أو الأيام المتبقية) لأن مدة الاشتراك الفعلية قد تختلف يوم أو
+           يومين عن المدة المحسوبة — تاريخ الانتهاء التقريبي يبقى داخليًا
+           بالداشبورد فقط ولا يظهر للعميل. */
+        .order-meta.order-meta-single {
+            grid-template-columns: 1fr;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .order-remaining {
             text-align: center;
             font-size: 0.8rem;
@@ -1008,18 +1019,13 @@
                 <span class="badge-info" id="displayDuration"><i class="fa-regular fa-calendar-check"></i> شهر واحد</span>
             </div>
 
-            <!-- تاريخ الشراء والمدة المتبقية -->
-            <div class="order-meta">
+            <!-- تاريخ الشراء (تاريخ الانتهاء تقريبي فقط ويبقى بالداشبورد ولا يظهر للعميل) -->
+            <div class="order-meta order-meta-single">
                 <div class="om-box">
                     <div class="om-label">🗓️ تاريخ الشراء</div>
                     <div class="om-value" id="cardPurchaseDate">--</div>
                 </div>
-                <div class="om-box">
-                    <div class="om-label">⏳ تاريخ الانتهاء</div>
-                    <div class="om-value" id="cardExpiryDate">--</div>
-                </div>
             </div>
-            <div class="order-remaining" id="cardRemaining">-- يوم متبقي</div>
 
             <!-- خط فاصل بشكل تذكرة -->
             <div class="ticket-divider"></div>
@@ -1193,20 +1199,9 @@
 
             document.getElementById('cardOrderId').textContent = idText;
             document.getElementById('cardPurchaseDate').textContent = formatDateAr(currentOrder.purchaseDate);
-            document.getElementById('cardExpiryDate').textContent = formatDateAr(currentOrder.expiryDate);
 
-            const remain = daysRemaining(currentOrder.expiryDate);
-            const remainEl = document.getElementById('cardRemaining');
-            if (remain > 0) {
-                remainEl.textContent = `⏳ متبقي ${remain} يوم على الانتهاء`;
-                remainEl.classList.remove('expired');
-            } else if (remain === 0) {
-                remainEl.textContent = `⏳ ينتهي اليوم`;
-                remainEl.classList.remove('expired');
-            } else {
-                remainEl.textContent = `⚠️ الاشتراك منتهي`;
-                remainEl.classList.add('expired');
-            }
+            // تاريخ الانتهاء والمدة المتبقية يبقيان داخليين بالداشبورد فقط (op-expiry)
+            // ولا يُطبعان بالبطاقة المُصدّرة، لأن مدة الاشتراك الفعلية تقريبية.
         }
 
         // ============================================================
