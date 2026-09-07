@@ -27,6 +27,50 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
 
     <style>
+        /* =========================================================
+           تأثيرات بصرية عامة (خلفية حيّة + ظهور تدريجي + تفاعلات دقيقة)
+           كلها خارج .card-wrapper تمامًا أو داخله بكلاس no-print — عشان
+           ما تأثر إطلاقًا على شكل البطاقة المُصدّرة (PDF/صورة) ولا هوية
+           الموقع. لمستخدمي "تقليل الحركة" نلغي كل الأنيميشن تلقائيًا.
+        ========================================================= */
+        @keyframes fadeUpIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes blobFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%      { transform: translate(3%, -4%) scale(1.08); }
+            66%      { transform: translate(-3%, 3%) scale(0.95); }
+        }
+        @keyframes bgFxPulse {
+            0%, 100% { opacity: .55; }
+            50%      { opacity: .9; }
+        }
+
+        .bg-fx {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-fx span {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            animation: blobFloat 16s ease-in-out infinite, bgFxPulse 8s ease-in-out infinite;
+        }
+        .bg-fx span:nth-child(1) { width: 340px; height: 340px; top: -80px; right: -60px; background: rgba(255, 15, 43, 0.22); animation-delay: 0s, 0s; }
+        .bg-fx span:nth-child(2) { width: 300px; height: 300px; bottom: -60px; left: -60px; background: rgba(242, 193, 78, 0.18); animation-delay: 2s, 1s; }
+        .bg-fx span:nth-child(3) { width: 260px; height: 260px; top: 40%; left: 50%; background: rgba(255, 77, 94, 0.12); animation-delay: 4s, 2s; }
+
+        .fx-enter { animation: fadeUpIn .6s var(--ease) both; }
+        .fx-enter.fx-delay { animation-delay: .12s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bg-fx span, .fx-enter { animation: none !important; }
+        }
+
         :root {
             --bg: #09090a;
             --surface: rgba(255, 255, 255, 0.045);
@@ -63,10 +107,92 @@
             color: var(--text);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 0 20px 20px;
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* =========================================================
+           شريط تنقّل علوي — صار بنفس شكل بطاقات الموقع (نفس الخلفية
+           والحدود والزوايا المدوّرة والظل) بدل شريط عريض حاد الحواف،
+           عشان يبين قطعة وحدة من نفس هوية الموقع مو عنصر غريب فوقه.
+        ========================================================= */
+        .site-nav {
+            position: sticky;
+            top: 14px;
+            z-index: 50;
+            width: 100%;
+            max-width: 1100px;
+            margin: 18px auto 28px;
+        }
+        .site-nav-inner {
+            background: var(--elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 12px 18px;
+            flex-wrap: wrap;
+        }
+        .site-nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            background: linear-gradient(90deg, var(--gold), var(--red-soft));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .site-nav-brand svg { width: 24px; height: 24px; flex-shrink: 0; }
+        .site-nav-links {
+            display: flex;
+            gap: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 4px;
+            max-width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .site-nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            background: transparent;
+            border: none;
+            border-radius: 50px;
+            color: var(--text-dim);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: all .25s var(--ease), transform .12s var(--ease);
+        }
+        .nav-tab-btn i { font-size: 0.85rem; width: 14px; text-align: center; }
+        .nav-tab-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+        .nav-tab-btn:active { transform: scale(.95); }
+        .nav-tab-btn.active {
+            background: linear-gradient(90deg, var(--red-soft), var(--red));
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 15, 43, 0.3);
+        }
+
+        @media (max-width: 640px) {
+            .site-nav-inner { justify-content: center; }
+            .site-nav-brand { display: none; }
+            .site-nav-links { width: 100%; justify-content: flex-start; }
         }
 
         .card-wrapper {
@@ -87,6 +213,14 @@
             gap: 26px;
         }
 
+        /* لما يكون القسم المفعّل غير "طلب جديد" (بحث/إحصائيات/نسخ احتياطي):
+           بطاقة التسليم تختفي والقسم ياخذ عرض الصفحة كاملة كأنه صفحة
+           منفصلة قائمة بذاتها، رغم إنه بنفس index.html وبنفس الرابط. */
+        .page-shell.solo-view .card-wrapper { display: none; }
+        .page-shell.solo-view .dashboard-controls {
+            max-width: 640px;
+        }
+
         /* لوحة التحكم - عريضة على الكمبيوتر، طولية بالجوال، ولا تدخل أي تصدير */
         .dashboard-controls {
             width: 100%;
@@ -96,6 +230,7 @@
             border-radius: var(--radius-lg);
             padding: 22px 20px;
             text-align: right;
+            transition: max-width .3s var(--ease);
         }
 
         .dash-title {
@@ -117,7 +252,11 @@
                 max-width: 600px;
                 flex: 1;
                 position: sticky;
-                top: 24px;
+                top: 78px;
+            }
+
+            .page-shell.solo-view .dashboard-controls {
+                max-width: 720px;
             }
 
             .dashboard-controls .actions {
@@ -364,6 +503,69 @@
             opacity: .6;
             cursor: wait;
         }
+
+        /* لمسة تفاعل دقيقة عند الضغط على الأزرار والخيارات - تحسّن الإحساس
+           بالاستجابة بدون ما تغيّر شكل أي شي بالبطاقة المُصدّرة */
+        .btn:not(:disabled):active,
+        .btn-ghost:active,
+        .opt-btn:active,
+        .icon-btn:active,
+        .of-btn:active {
+            transform: scale(.96);
+        }
+        .btn, .btn-ghost, .opt-btn, .icon-btn, .of-btn {
+            transition: all .2s var(--ease), transform .12s var(--ease);
+        }
+
+        /* عنوان صغير فوق كل قسم (لوحة التحكم / بطاقة التسليم) عشان يبين
+           بوضوح إن هذي أقسام منفصلة لها وظيفة مختلفة */
+        .section-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-dimmer);
+            letter-spacing: .3px;
+            margin-bottom: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+        .section-eyebrow .eyebrow-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: linear-gradient(90deg, var(--gold), var(--red));
+            flex-shrink: 0;
+        }
+
+        /* تبويب النسخ الاحتياطي (سحب/إيداع البيانات) */
+        .backup-intro {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+        .backup-group { margin-bottom: 16px; }
+        .backup-group .backup-group-title {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.85rem; font-weight: 800; color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .backup-group .backup-group-desc {
+            font-size: 0.74rem; color: var(--text-dimmer);
+            margin: -4px 0 10px;
+        }
+        #importBackupInput { display: none; }
+        .backup-stats-mini {
+            display: flex; justify-content: center; gap: 6px;
+            font-size: 0.75rem; color: var(--text-dim);
+            background: var(--input-bg); border: 1px dashed var(--border-hover);
+            border-radius: 50px; padding: 8px 12px; margin-bottom: 18px;
+        }
+        .backup-stats-mini b { color: var(--gold); }
 
         .toast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-10px);
@@ -1155,15 +1357,41 @@
 </head>
 <body>
 
+    <!-- خلفية حيّة زخرفية فقط (فقاعات متوهجة بألوان الهوية) - عنصر ثابت
+         خارج .card-wrapper كليًا فما تدخل إطلاقًا بأي تصدير صورة/PDF -->
+    <div class="bg-fx no-print" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <!-- شريط تنقّل علوي: كل قسم يشتغل كصفحة مستقلة بصريًا بنفس رابط
+         الموقع (بدون تحميل صفحة جديدة) — انظر switchTab() بالأسفل -->
+    <nav class="site-nav no-print">
+        <div class="site-nav-inner">
+            <span class="site-nav-brand">
+                <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M75 65 C75 38, 125 38, 125 65" stroke="url(#navBagGrad)" stroke-width="14" stroke-linecap="round" fill="none"/>
+                    <path d="M45 70 L155 70 C162 70, 167 76, 165 83 L150 162 C148 170, 142 175, 134 175 L66 175 C58 175, 52 170, 50 162 L35 83 C33 76, 38 70, 45 70 Z" stroke="url(#navBagGrad)" stroke-width="13" stroke-linejoin="round" fill="none"/>
+                    <path d="M88 95 L124 116 C127 118, 127 122, 124 124 L88 145 C84 147, 80 144, 80 140 L80 100 C80 96, 84 93, 88 95 Z" fill="url(#navBagGrad)"/>
+                    <defs><linearGradient id="navBagGrad" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f2c14e"/><stop offset="100%" stop-color="#ff0f2b"/></linearGradient></defs>
+                </svg>
+                MASOUB STORE
+            </span>
+            <div class="site-nav-links">
+                <button class="nav-tab-btn active" id="tabBtnNew" onclick="switchTab('new')"><i class="fa-solid fa-file-invoice"></i> طلب جديد</button>
+                <button class="nav-tab-btn" id="tabBtnSearch" onclick="switchTab('search')"><i class="fa-solid fa-magnifying-glass"></i> بحث</button>
+                <button class="nav-tab-btn" id="tabBtnStats" onclick="switchTab('stats')"><i class="fa-solid fa-chart-simple"></i> إحصائيات</button>
+                <button class="nav-tab-btn" id="tabBtnBackup" onclick="switchTab('backup')"><i class="fa-solid fa-box-archive"></i> نسخ احتياطي</button>
+            </div>
+        </div>
+    </nav>
+
     <div id="toast" class="toast">
         <span id="toastMsg"><i class="fa-solid fa-circle-check"></i> تم النسخ بنجاح</span>
         <button id="toastUndoBtn" class="toast-undo" hidden>تراجع</button>
     </div>
 
-    <div class="page-shell">
+    <div class="page-shell" id="pageShell">
 
         <!-- لوحة التحكم - خارج بطاقة التصدير تماماً -->
-        <div class="dashboard-controls no-print">
+        <div class="dashboard-controls no-print fx-enter">
             <span class="dash-title"><i class="fa-solid fa-sliders"></i> لوحة التحكم 🎛️</span>
 
             <!-- زر تثبيت الموقع كتطبيق (يظهر فقط إذا المتصفح يدعم التثبيت) -->
@@ -1185,12 +1413,6 @@
                     <div class="qg-num" id="qgActive">0</div>
                     <div class="qg-label">✅ نشطة</div>
                 </div>
-            </div>
-
-            <div class="dash-tabs">
-                <button class="dash-tab-btn active" id="tabBtnNew" onclick="switchTab('new')">🧾 طلب جديد</button>
-                <button class="dash-tab-btn" id="tabBtnSearch" onclick="switchTab('search')">🔍 بحث</button>
-                <button class="dash-tab-btn" id="tabBtnStats" onclick="switchTab('stats')">📊 إحصائيات</button>
             </div>
 
             <!-- تبويب: طلب جديد -->
@@ -1379,13 +1601,49 @@
                 <div class="stats-footnote" id="statsTotal">إجمالي الطلبات المحفوظة: 0 📦</div>
 
                 <div class="export-row">
-                    <button class="btn-ghost" onclick="exportOrdersCSV()"><i class="fa-solid fa-file-csv"></i> تصدير السجل كامل CSV</button>
+                    <button class="btn-ghost" onclick="switchTab('backup')"><i class="fa-solid fa-box-archive"></i> سحب/إيداع البيانات من تبويب النسخ الاحتياطي 💾</button>
+                </div>
+            </div>
+
+            <!-- تبويب: النسخ الاحتياطي (سحب البيانات كاملة + إيداع/استيراد نسخة سابقة) -->
+            <div class="dash-panel" id="panelBackup" hidden>
+                <div class="backup-intro">
+                    <i class="fa-solid fa-circle-info"></i>
+                    كل السجل محفوظ داخليًا بمتصفحك فقط (localStorage) ولا يترفع لأي سيرفر.
+                    من هنا تقدر <b>تسحب</b> نسخة كاملة من السجل لحفظها بجهازك، أو <b>تودع/تستورد</b>
+                    نسخة سابقة رجّعتها — مفيد لو غيّرت متصفح أو جهاز أو مسحت الكاش بالغلط.
+                </div>
+
+                <div class="backup-stats-mini">
+                    <i class="fa-solid fa-database"></i> الطلبات المحفوظة حاليًا: <b id="backupCurrentCount">0</b>
+                </div>
+
+                <div class="backup-group">
+                    <div class="backup-group-title"><i class="fa-solid fa-arrow-up-from-bracket"></i> سحب (تصدير) 📤</div>
+                    <div class="backup-group-desc">يحمّل نسخة كاملة من كل الطلبات المحفوظة على جهازك.</div>
+                    <div class="actions" style="margin-top:0;">
+                        <button class="btn btn-secondary" onclick="exportBackupJSON()"><i class="fa-solid fa-file-arrow-down"></i> نسخة احتياطية كاملة (JSON)</button>
+                        <button class="btn-ghost" style="margin-top:0;" onclick="exportOrdersCSV()"><i class="fa-solid fa-file-csv"></i> تصدير كـ CSV (إكسل)</button>
+                    </div>
+                </div>
+
+                <div class="backup-group">
+                    <div class="backup-group-title"><i class="fa-solid fa-arrow-down-to-bracket"></i> إيداع (استيراد) 📥</div>
+                    <div class="backup-group-desc">يرجّع نسخة احتياطية سبق سحبتها (JSON أو CSV) ويدمجها مع السجل الحالي بدون تكرار.
+                        ⚠️ ملفات CSV ما فيها كلمة المرور (مو موجودة أصلاً بالتصدير)، فتنستورد فاضية وتقدر تعبيها يدويًا بعدين من تبويب البحث.</div>
+                    <button class="btn btn-primary" onclick="document.getElementById('importBackupInput').click()">
+                        <i class="fa-solid fa-upload"></i> اختر ملف النسخة الاحتياطية (JSON / CSV)
+                    </button>
+                    <input type="file" id="importBackupInput" accept="application/json,.json,.csv,text/csv" onchange="importBackupFile(event)">
                 </div>
             </div>
         </div>
 
         <!-- بطاقة التصدير - ثابتة الشكل، ما تتأثر بلوحة التحكم إطلاقاً -->
-        <div class="card-wrapper">
+        <div class="card-wrapper fx-enter fx-delay">
+        <!-- هذا العنوان no-print: يظهر بالموقع بس ويختفي تلقائيًا وقت تصدير
+             الصورة/PDF (نفس آلية إخفاء عناصر التحكم من داخل البطاقة) -->
+        <span class="section-eyebrow no-print" style="margin-bottom:14px;">القسم الثاني — بطاقة التسليم (تُصدَّر للعميل)</span>
         <div class="card">
             
             <!-- اللوجو SVG الخاص بـ MASOUB STORE -->
@@ -1667,15 +1925,36 @@
         // ============================================================
         // التبويبات
         // ============================================================
-        function switchTab(name) {
-            const panels = { new: 'panelNew', search: 'panelSearch', stats: 'panelStats' };
-            const btns = { new: 'tabBtnNew', search: 'tabBtnSearch', stats: 'tabBtnStats' };
+        function switchTab(name, skipHistory) {
+            const panels = { new: 'panelNew', search: 'panelSearch', stats: 'panelStats', backup: 'panelBackup' };
+            const btns = { new: 'tabBtnNew', search: 'tabBtnSearch', stats: 'tabBtnStats', backup: 'tabBtnBackup' };
+            if (!panels[name]) name = 'new';
             Object.keys(panels).forEach(k => {
                 document.getElementById(panels[k]).hidden = (k !== name);
                 document.getElementById(btns[k]).classList.toggle('active', k === name);
             });
+            // كل قسم غير "طلب جديد" ياخذ عرض الصفحة كاملة ويختفي معه كرت
+            // التصدير، عشان يحس المستخدم إنه بصفحة منفصلة قائمة بذاتها
+            document.getElementById('pageShell').classList.toggle('solo-view', name !== 'new');
+
+            if (!skipHistory && location.hash.replace('#', '') !== name) {
+                history.pushState(null, '', '#' + name);
+            }
+
             if (name === 'stats') renderStats();
+            if (name === 'backup') {
+                const countEl = document.getElementById('backupCurrentCount');
+                if (countEl) countEl.textContent = getOrders().length;
+            }
         }
+
+        // يقرأ القسم الحالي من هاش الرابط (#new/#search/#stats/#backup) —
+        // يشتغل عند فتح الصفحة أول مرة وعند رجوع/تقدم المستخدم بالمتصفح
+        function applyHashView() {
+            const name = location.hash.replace('#', '') || 'new';
+            switchTab(name, true);
+        }
+        window.addEventListener('popstate', applyHashView);
 
         // ============================================================
         // البحث برقم الطلب أو رقم جوال العميل
@@ -1979,6 +2258,155 @@
             link.click();
             URL.revokeObjectURL(url);
             showToast('تم تصدير السجل كامل ✅');
+        }
+
+        // ============================================================
+        // النسخ الاحتياطي: سحب (تصدير) كامل السجل كـ JSON، وإيداع (استيراد)
+        // نسخة سابقة ودمجها مع السجل الحالي بدون تكرار الطلبات.
+        // ============================================================
+        function exportBackupJSON() {
+            const orders = getOrders();
+            if (!orders.length) { showToast('ما فيه طلبات نسحبها بعد'); return; }
+
+            const payload = {
+                app: 'masoub-store-orders',
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                count: orders.length,
+                orders
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `masoub-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast(`تم سحب نسخة احتياطية (${orders.length} طلب) ✅📤`);
+        }
+
+        // يحوّل تاريخ عربي بصيغة formatDateAr (مثلاً "٥ سبتمبر ٢٠٢٦") إلى Date —
+        // نستخدمه وقت استيراد ملفات CSV قديمة مُصدّرة من نفس الموقع.
+        const AR_MONTHS = { 'يناير':0,'فبراير':1,'مارس':2,'أبريل':3,'مايو':4,'يونيو':5,'يوليو':6,'أغسطس':7,'سبتمبر':8,'أكتوبر':9,'نوفمبر':10,'ديسمبر':11 };
+        function parseArabicDate(str) {
+            if (!str) return null;
+            const arDigits = { '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9' };
+            const normalized = String(str).replace(/[٠-٩]/g, d => arDigits[d]).trim();
+            const parts = normalized.split(/\s+/);
+            if (parts.length < 3) return null;
+            const day = parseInt(parts[0], 10);
+            const month = AR_MONTHS[parts[1]];
+            const year = parseInt(parts[2], 10);
+            if (isNaN(day) || month === undefined || isNaN(year)) return null;
+            const d = new Date(year, month, day);
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        // محلّل CSV بسيط يدعم الحقول المقتبسة (مطابق لصيغة exportOrdersCSV نفسها)
+        function parseCSVText(text) {
+            text = text.replace(/^\uFEFF/, '');
+            const rows = [];
+            let row = [], field = '', inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (inQuotes) {
+                    if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQuotes = false; }
+                    else field += c;
+                } else if (c === '"') inQuotes = true;
+                else if (c === ',') { row.push(field); field = ''; }
+                else if (c === '\n' || c === '\r') {
+                    if (c === '\r' && text[i + 1] === '\n') i++;
+                    row.push(field); field = '';
+                    if (row.some(f => f !== '')) rows.push(row);
+                    row = [];
+                } else field += c;
+            }
+            if (field !== '' || row.length) { row.push(field); if (row.some(f => f !== '')) rows.push(row); }
+            return rows;
+        }
+
+        // يحوّل صفوف CSV (المُصدّرة من exportOrdersCSV بنفس هذا الموقع) لمصفوفة
+        // طلبات متوافقة مع نموذج البيانات الداخلي. كلمة المرور مو موجودة
+        // بالـ CSV أصلاً (التصدير القديم ما كان يحفظها) فتنستورد فاضية.
+        function ordersFromCSV(text) {
+            const rows = parseCSVText(text);
+            if (rows.length < 2) return [];
+            return rows.slice(1).map(cols => {
+                const [idRaw, service, duration, phone, email, purchaseStr, expiryStr] = cols;
+                const id = parseInt(String(idRaw).replace(/[^\d]/g, ''), 10);
+                const purchaseDate = parseArabicDate(purchaseStr);
+                const expiryDate = parseArabicDate(expiryStr);
+                if (!id || !purchaseDate || !expiryDate) return null;
+                return {
+                    id,
+                    phone: phone || '',
+                    service: service || '',
+                    serviceIcon: 'fa-solid fa-tv',
+                    duration: duration || '',
+                    durationDays: Math.max(1, Math.round((expiryDate - purchaseDate) / (24 * 60 * 60 * 1000))),
+                    email: email || '',
+                    password: '',
+                    purchaseDate: purchaseDate.toISOString(),
+                    expiryDate: expiryDate.toISOString(),
+                    createdAt: purchaseDate.toISOString()
+                };
+            }).filter(Boolean);
+        }
+
+        function importBackupFile(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const isCSV = /\.csv$/i.test(file.name) || file.type.includes('csv');
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                let incoming;
+                if (isCSV) {
+                    incoming = ordersFromCSV(reader.result);
+                    if (!incoming.length) {
+                        showToast('ما قدرنا نقرأ أي طلب صالح من ملف الـ CSV ⚠️');
+                        event.target.value = '';
+                        return;
+                    }
+                } else {
+                    let parsed;
+                    try { parsed = JSON.parse(reader.result); }
+                    catch (e) { showToast('الملف مو نسخة احتياطية صالحة ⚠️'); event.target.value = ''; return; }
+                    incoming = Array.isArray(parsed) ? parsed : parsed.orders;
+                    if (!Array.isArray(incoming)) {
+                        showToast('الملف مو نسخة احتياطية صالحة ⚠️');
+                        event.target.value = '';
+                        return;
+                    }
+                    incoming = incoming.filter(o => o && o.id && o.purchaseDate && o.expiryDate);
+                    if (!incoming.length) {
+                        showToast('ما فيه طلبات صالحة بهذا الملف ⚠️');
+                        event.target.value = '';
+                        return;
+                    }
+                }
+
+                const current = getOrders();
+                const currentIds = new Set(current.map(o => o.id));
+                const newOnes = incoming.filter(o => !currentIds.has(o.id));
+                const duplicates = incoming.length - newOnes.length;
+                const missingPasswordNote = isCSV ? '\n(تنبيه: هذا ملف CSV فما فيه كلمات مرور، بتنستورد فاضية)' : '';
+
+                if (!confirm(`هذا الملف فيه ${incoming.length} طلب (${newOnes.length} جديد${duplicates ? ` و${duplicates} مكرر راح نتجاهله` : ''}).${missingPasswordNote}\nتبي تكمل الإيداع وتدمجهم بالسجل الحالي؟`)) {
+                    event.target.value = '';
+                    return;
+                }
+
+                const merged = current.concat(newOnes);
+                saveOrders(merged);
+                renderStats();
+                const countEl = document.getElementById('backupCurrentCount');
+                if (countEl) countEl.textContent = merged.length;
+                showToast(`تم إيداع ${newOnes.length} طلب جديد بالسجل ✅📥`);
+                event.target.value = '';
+            };
+            reader.onerror = () => { showToast('تعذّر قراءة الملف، حاول مرة ثانية ⚠️'); event.target.value = ''; };
+            reader.readAsText(file);
         }
 
         // يحذف طلب من السجل (بعد تأكيد المستخدم) مع إمكانية التراجع خلال 5 ثواني
@@ -2318,6 +2746,7 @@
         // تهيئة أولية عند فتح الصفحة: نولّد رقم طلب جديد جاهز ونحسب الإحصائيات
         startNewOrder(false);
         renderStats();
+        applyHashView();
     </script>
 </body>
 </html>
